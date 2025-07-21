@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "nodenext",            // Alterar para 'nodenext'
+    "moduleResolution": "nodenext",  // Configuração de resolução de módulos
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "declaration": true,
+    "skipLibCheck": true,
+    "baseUrl": "./",
+    "paths": {
+      "*": ["src/*"]                 // Ajuste conforme sua estrutura de diretórios
+    }
+  }
+}
