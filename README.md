@@ -267,7 +267,7 @@ To contribute to this SDK:
 
 ```bash
 # Clone the repository
-git clone https://github.com/KevenCampos/camposcloud-sdk
+git clone https://github.com/camposcloud/camposcloud-sdk
 
 # Install dependencies
 npm install
@@ -281,7 +281,7 @@ npm run build
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/KevenCampos/CamposCloudSDK/issues)
+- **Issues**: [GitHub Issues](https://github.com/camposcloud/camposcloud-sdk/issues)
 - **Email**: kevencampos1@hotmail.com
 
 ## License

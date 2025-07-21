@@ -10,12 +10,12 @@
     "test": "tsx watch src/test/index.ts"
   },
   "bugs": {
-    "url": "https://github.com/KevenCampos/camposcloud-sdk/issues",
+    "url": "https://github.com/camposcloud/camposcloud-sdk/issues",
     "email": "kevencampos1@hotmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/KevenCampos/camposcloud-sdk"
+    "url": "https://github.com/camposcloud/camposcloud-sdk/issues"
   },
   "author": "KevenCampos",
   "license": "ISC",
