@@ -2,6 +2,8 @@
 
 A TypeScript/JavaScript SDK for interacting with the CamposCloud API. This SDK provides a simple and intuitive way to manage applications, upload files, and perform various operations on the CamposCloud platform.
 
+You can see the full API documentation at [API Docs](https://docs.camposcloud.com).
+
 ## Installation
 
 ```bash
@@ -36,19 +38,6 @@ const main = async () => {
 
 main();
 ```
-
-## API Reference
-
-### Constructor
-
-```typescript
-new CamposCloudSDK({ apiToken: string })
-```
-
-Creates a new instance of the CamposCloud SDK.
-
-**Parameters:**
-- `apiToken` (string): Your CamposCloud API token
 
 ### Methods
 
@@ -101,9 +90,6 @@ const app = await api.createApplication({
     mainFile: "index.js",
     memoryMB: 512,
     runtimeEnvironment: "nodejs",
-    exposedViaWeb: true,
-    autoRestartEnabled: true,
-    startupCommand: "npm start"
 });
 ```
 
