@@ -1,6 +1,6 @@
 # CamposCloud SDK
 
-A TypeScript/JavaScript SDK for interacting with the CamposCloud API. This SDK provides a simple and intuitive way to manage applications, upload files, and perform various operations on the CamposCloud platform.
+A TypeScript/JavaScript SDK for interacting with the CamposCloud API. This SDK provides a simple and intuitive way to manage applications, upload files, and perform various operations on the [CamposCloud platform](https://camposcloud.com).
 
 You can see the full API documentation at [API Docs](https://docs.camposcloud.com).
 
