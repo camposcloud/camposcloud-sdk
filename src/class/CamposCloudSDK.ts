@@ -174,7 +174,7 @@ export default class CamposCloudSDK {
 
     public getTeams = async (): Promise<TeamResponseData[]> => {
         const response = await this.axiosInstance.get("/teams");
-        return response.data.teams as TeamResponseData[];
+        return response.data as TeamResponseData[];
     }
 
     public getTeam = async ({ teamId }: { teamId: string }): Promise<TeamResponseData> => {
@@ -183,6 +183,6 @@ export default class CamposCloudSDK {
         }
 
         const response = await this.axiosInstance.get(`/teams/${teamId}`);
-        return response.data.team as TeamResponseData;
+        return response.data as TeamResponseData;
     }
 }
