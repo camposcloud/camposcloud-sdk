@@ -62,7 +62,7 @@ class CamposCloudSDK {
                 formData.append("startupCommand", startupCommand);
             }
             if (teamId) {
-                formData.append("teamId", teamId);
+                formData.append("team", teamId);
             }
             const response = yield this.axiosInstance.post("/apps/create", formData, {
                 headers: Object.assign({}, formData.getHeaders())
@@ -117,6 +117,17 @@ class CamposCloudSDK {
         this.getMe = () => __awaiter(this, void 0, void 0, function* () {
             const response = yield this.axiosInstance.get("/users/@me");
             return response.data.user;
+        });
+        this.getTeams = () => __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.axiosInstance.get("/teams");
+            return response.data.teams;
+        });
+        this.getTeam = (_a) => __awaiter(this, [_a], void 0, function* ({ teamId }) {
+            if (!teamId || typeof teamId !== "string") {
+                throw new Error("Team ID (teamId) must be a valid string.");
+            }
+            const response = yield this.axiosInstance.get(`/teams/${teamId}`);
+            return response.data.team;
         });
         if (!apiToken) {
             throw new Error("API Token is required to initialize CamposCloudSDK.");

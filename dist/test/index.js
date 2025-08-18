@@ -12,8 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const CamposCloudSDK_1 = __importDefault(require("class/CamposCloudSDK"));
-const api = new CamposCloudSDK_1.default({ apiToken: "You-Token-Here" });
+const index_1 = __importDefault(require("../index"));
+const api = new index_1.default({ apiToken: "You-Token-Here" });
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const me = yield api.getMe();
     console.log(`Hello ${me.name} 👋`);

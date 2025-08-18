@@ -1,4 +1,4 @@
-import CamposCloudSDK from "class/CamposCloudSDK";
+import CamposCloudSDK from "../index";
 
 const api = new CamposCloudSDK({ apiToken: "You-Token-Here" });
 

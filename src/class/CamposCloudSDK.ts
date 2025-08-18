@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
-import { ApplicationResponseData, CreateApplicationDataParams, UserData } from "../types";
+import { ApplicationResponseData, CreateApplicationDataParams, UserData, TeamResponseData } from "../types";
 
 import FormData from "form-data";
 import Application from "./Application";
@@ -25,7 +25,7 @@ export default class CamposCloudSDK {
         });
     }
 
-    public getApplication = async ({ appId }: { appId: string }) => {
+    public getApplication = async ({ appId }: { appId: string }): Promise<Application> => {
         if (!appId || typeof appId !== "string") {
             throw new Error("Application ID (appId) must be a valid string.");
         }
@@ -51,7 +51,7 @@ export default class CamposCloudSDK {
         };
     }
 
-    public createApplication = async (data: CreateApplicationDataParams) => {
+    public createApplication = async (data: CreateApplicationDataParams): Promise<Application> => {
         const { file, appName, mainFile, memoryMB, runtimeEnvironment, exposedViaWeb, autoRestartEnabled, startupCommand, teamId } = data;
 
         if (!file){
@@ -94,7 +94,7 @@ export default class CamposCloudSDK {
         }
 
         if (teamId) {
-            formData.append("teamId", teamId);
+            formData.append("team", teamId);
         }
 
         const response = await this.axiosInstance.post("/apps/create", formData, {
@@ -106,7 +106,7 @@ export default class CamposCloudSDK {
         return new Application(this, response.data as ApplicationResponseData);
     }
 
-    public deleteApplication = async ({ appId }: { appId: string }) => {
+    public deleteApplication = async ({ appId }: { appId: string }): Promise<AxiosResponse> => {
         if (!appId || typeof appId !== "string") {
             throw new Error("Application ID (appId) must be a valid string.");
         }
@@ -115,7 +115,7 @@ export default class CamposCloudSDK {
         return response as AxiosResponse;
     }
 
-    public startApplication = async ({ appId }: { appId: string }) => {
+    public startApplication = async ({ appId }: { appId: string }): Promise<ApplicationResponseData> => {
         if (!appId || typeof appId !== "string") {
             throw new Error("Application ID (appId) must be a valid string.");
         }
@@ -124,7 +124,7 @@ export default class CamposCloudSDK {
         return response.data as ApplicationResponseData;
     }
 
-    public stopApplication = async ({ appId }: { appId: string }) => {
+    public stopApplication = async ({ appId }: { appId: string }): Promise<ApplicationResponseData> => {
         if (!appId || typeof appId !== "string") {
             throw new Error("Application ID (appId) must be a valid string.");
         }
@@ -133,7 +133,7 @@ export default class CamposCloudSDK {
         return response.data as ApplicationResponseData;
     }
 
-    public restartApplication = async ({ appId }: { appId: string }) => {
+    public restartApplication = async ({ appId }: { appId: string }): Promise<ApplicationResponseData> => {
         if (!appId || typeof appId !== "string") {
             throw new Error("Application ID (appId) must be a valid string.");
         }
@@ -142,7 +142,7 @@ export default class CamposCloudSDK {
         return response.data as ApplicationResponseData;
     }
 
-    public uploadFile = async ({ appId, file, path }: { appId: string, file: Buffer, path?: string }) => {
+    public uploadFile = async ({ appId, file, path }: { appId: string, file: Buffer, path?: string }): Promise<{ message: string } | AxiosError> => {
         if (!appId || typeof appId !== "string") {
             throw new Error("Application ID (appId) must be a valid string.");
         }
@@ -167,8 +167,22 @@ export default class CamposCloudSDK {
         return response.data as { message: string } || AxiosError;
     }
 
-    public getMe = async () => {
+    public getMe = async (): Promise<UserData> => {
         const response = await this.axiosInstance.get("/users/@me");
         return response.data.user as UserData;
+    }
+
+    public getTeams = async (): Promise<TeamResponseData[]> => {
+        const response = await this.axiosInstance.get("/teams");
+        return response.data.teams as TeamResponseData[];
+    }
+
+    public getTeam = async ({ teamId }: { teamId: string }): Promise<TeamResponseData> => {
+        if (!teamId || typeof teamId !== "string") {
+            throw new Error("Team ID (teamId) must be a valid string.");
+        }
+
+        const response = await this.axiosInstance.get(`/teams/${teamId}`);
+        return response.data.team as TeamResponseData;
     }
 }

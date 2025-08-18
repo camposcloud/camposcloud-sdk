@@ -1,13 +1,28 @@
 {
   "name": "@camposcloud/sdk",
-  "version": "1.0.0",
+  "version": "1.0.8",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "description": "camposcloud-sdk is a TypeScript SDK for interacting with the CamposCloud API, providing methods to manage applications, users, and more.",
   "scripts": {
     "build": "tsc && node dist/index.js",
     "dev": "tsx watch src/test/index.ts",
     "start": "node dist/index.js",
     "test": "tsx watch src/test/index.ts"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "bugs": {
     "url": "https://github.com/camposcloud/camposcloud-sdk/issues",

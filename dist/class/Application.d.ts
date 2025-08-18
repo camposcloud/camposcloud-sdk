@@ -1,4 +1,4 @@
-import { ApplicationResponseData } from "types";
+import { ApplicationResponseData } from "../types";
 import CamposCloudSDK from "./CamposCloudSDK";
 declare class Application {
     private sdk;
@@ -13,6 +13,6 @@ declare class Application {
         path?: string;
     }) => Promise<{
         message: string;
-    }>;
+    } | import("axios").AxiosStatic.AxiosError>;
 }
 export default Application;

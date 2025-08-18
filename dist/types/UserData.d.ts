@@ -25,6 +25,7 @@ export interface UserData {
             color: string;
             createdAt: string;
             updatedAt: string;
+            ramMB?: number;
         };
         negotiatedPrice?: number;
         allocatedMemoryMB?: number;

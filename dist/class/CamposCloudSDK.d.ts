@@ -1,6 +1,7 @@
-import axios from "axios";
-import { ApplicationResponseData, CreateApplicationDataParams, UserData } from "../types";
+import { AxiosResponse } from "axios";
+import { ApplicationResponseData, CreateApplicationDataParams, UserData, TeamResponseData } from "../types";
 import Application from "./Application";
+import { AxiosError } from "axios";
 export default class CamposCloudSDK {
     private apiToken;
     private axiosInstance;
@@ -25,7 +26,7 @@ export default class CamposCloudSDK {
     createApplication: (data: CreateApplicationDataParams) => Promise<Application>;
     deleteApplication: ({ appId }: {
         appId: string;
-    }) => Promise<axios.AxiosResponse<any, any>>;
+    }) => Promise<AxiosResponse>;
     startApplication: ({ appId }: {
         appId: string;
     }) => Promise<ApplicationResponseData>;
@@ -41,6 +42,10 @@ export default class CamposCloudSDK {
         path?: string;
     }) => Promise<{
         message: string;
-    }>;
+    } | AxiosError>;
     getMe: () => Promise<UserData>;
+    getTeams: () => Promise<TeamResponseData[]>;
+    getTeam: ({ teamId }: {
+        teamId: string;
+    }) => Promise<TeamResponseData>;
 }

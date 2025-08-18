@@ -1,4 +1,4 @@
-import { ApplicationResponseData } from "types";
+import { ApplicationResponseData } from "../types";
 import CamposCloudSDK from "./CamposCloudSDK";
 
 class Application {
