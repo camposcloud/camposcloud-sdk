@@ -30,7 +30,7 @@ class CamposCloudSDK {
             return response.data;
         });
         this.createApplication = (data) => __awaiter(this, void 0, void 0, function* () {
-            const { file, appName, mainFile, memoryMB, runtimeEnvironment, exposedViaWeb, autoRestartEnabled, startupCommand, teamId } = data;
+            const { file, appName, mainFile, memoryMB, runtimeEnvironment, exposedViaWeb, autoRestartEnabled, startupCommand, teamId, environmentVariables } = data;
             if (!file) {
                 throw new Error("File is required to create an application.");
             }
@@ -46,12 +46,22 @@ class CamposCloudSDK {
             if (!runtimeEnvironment) {
                 throw new Error("Runtime environment (runtimeEnvironment) is required.");
             }
+            if (environmentVariables) {
+                environmentVariables.forEach(envVar => {
+                    if (typeof envVar.key !== "string" || typeof envVar.value !== "string") {
+                        throw new Error("Environment variable keys and values must be strings.");
+                    }
+                });
+            }
             const formData = new form_data_1.default();
             formData.append("file", file, "file.zip");
             formData.append("appName", appName);
             formData.append("mainFile", mainFile);
             formData.append("memoryMB", memoryMB);
             formData.append("runtimeEnvironment", runtimeEnvironment);
+            if (environmentVariables) {
+                formData.append("environmentVariables", JSON.stringify(environmentVariables));
+            }
             if (exposedViaWeb !== undefined) {
                 formData.append("exposedViaWeb", String(exposedViaWeb));
             }
@@ -68,6 +78,47 @@ class CamposCloudSDK {
                 headers: Object.assign({}, formData.getHeaders())
             });
             return new Application_1.default(this, response.data);
+        });
+        this.updateApplication = (data) => __awaiter(this, void 0, void 0, function* () {
+            const { appId, appName, memoryMB, startupCommand, runtimeEnvironment, exposedViaWeb, autoRestartEnabled, environmentVariables, teamId } = data;
+            if (!appId || typeof appId !== "string") {
+                throw new Error("Application ID (appId) must be a valid string.");
+            }
+            if (!appName) {
+                throw new Error("Application name (appName) is required.");
+            }
+            if (!memoryMB || isNaN(Number(memoryMB))) {
+                throw new Error("Memory size (memoryMB) must be a valid number.");
+            }
+            if (!runtimeEnvironment) {
+                throw new Error("Runtime environment (runtimeEnvironment) is required.");
+            }
+            if (environmentVariables) {
+                environmentVariables.forEach(envVar => {
+                    if (typeof envVar.key !== "string" || typeof envVar.value !== "string") {
+                        throw new Error("Environment variable keys and values must be strings.");
+                    }
+                });
+            }
+            const payload = {
+                appName,
+                memoryMB,
+                runtimeEnvironment
+            };
+            if (environmentVariables) {
+                payload.environmentVariables = environmentVariables;
+            }
+            if (exposedViaWeb !== undefined) {
+                payload.exposedViaWeb = exposedViaWeb;
+            }
+            if (autoRestartEnabled !== undefined) {
+                payload.autoRestartEnabled = autoRestartEnabled;
+            }
+            if (startupCommand) {
+                payload.startupCommand = startupCommand;
+            }
+            const response = yield this.axiosInstance.put(`/apps/${appId}/update`, payload);
+            return response.data;
         });
         this.deleteApplication = (_a) => __awaiter(this, [_a], void 0, function* ({ appId }) {
             if (!appId || typeof appId !== "string") {
@@ -120,14 +171,14 @@ class CamposCloudSDK {
         });
         this.getTeams = () => __awaiter(this, void 0, void 0, function* () {
             const response = yield this.axiosInstance.get("/teams");
-            return response.data.teams;
+            return response.data;
         });
         this.getTeam = (_a) => __awaiter(this, [_a], void 0, function* ({ teamId }) {
             if (!teamId || typeof teamId !== "string") {
                 throw new Error("Team ID (teamId) must be a valid string.");
             }
             const response = yield this.axiosInstance.get(`/teams/${teamId}`);
-            return response.data.team;
+            return response.data;
         });
         if (!apiToken) {
             throw new Error("API Token is required to initialize CamposCloudSDK.");

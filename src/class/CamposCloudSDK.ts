@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
-import { ApplicationResponseData, CreateApplicationDataParams, UserData, TeamResponseData } from "../types";
+import { ApplicationResponseData, CreateApplicationDataParams, UserData, TeamResponseData, UpdateApplicationDataParams } from "../types";
 
 import FormData from "form-data";
 import Application from "./Application";
@@ -52,7 +52,7 @@ export default class CamposCloudSDK {
     }
 
     public createApplication = async (data: CreateApplicationDataParams): Promise<Application> => {
-        const { file, appName, mainFile, memoryMB, runtimeEnvironment, exposedViaWeb, autoRestartEnabled, startupCommand, teamId } = data;
+        const { file, appName, mainFile, memoryMB, runtimeEnvironment, exposedViaWeb, autoRestartEnabled, startupCommand, teamId, environmentVariables } = data;
 
         if (!file){
             throw new Error("File is required to create an application.");
@@ -73,6 +73,14 @@ export default class CamposCloudSDK {
         if (!runtimeEnvironment){
             throw new Error("Runtime environment (runtimeEnvironment) is required.");
         }
+
+        if (environmentVariables) {
+            environmentVariables.forEach(envVar => {
+                if (typeof envVar.key !== "string" || typeof envVar.value !== "string") {
+                    throw new Error("Environment variable keys and values must be strings.");
+                }
+            });
+        }
  
         const formData = new FormData();
         formData.append("file", file, "file.zip");
@@ -80,6 +88,10 @@ export default class CamposCloudSDK {
         formData.append("mainFile", mainFile);
         formData.append("memoryMB", memoryMB);
         formData.append("runtimeEnvironment", runtimeEnvironment);
+
+        if (environmentVariables) {
+            formData.append("environmentVariables", JSON.stringify(environmentVariables));
+        }
 
         if (exposedViaWeb !== undefined) {
             formData.append("exposedViaWeb", String(exposedViaWeb));
@@ -104,6 +116,59 @@ export default class CamposCloudSDK {
         });
 
         return new Application(this, response.data as ApplicationResponseData);
+    }
+
+    public updateApplication = async (data: UpdateApplicationDataParams): Promise<ApplicationResponseData> => {
+        const { appId, appName, memoryMB, startupCommand, runtimeEnvironment, exposedViaWeb, autoRestartEnabled, environmentVariables, teamId } = data;
+
+        if (!appId || typeof appId !== "string") {
+            throw new Error("Application ID (appId) must be a valid string.");
+        }
+
+        if (!appName){
+            throw new Error("Application name (appName) is required.");
+        }
+
+        if (!memoryMB || isNaN(Number(memoryMB))) {
+            throw new Error("Memory size (memoryMB) must be a valid number.");
+        }
+
+        if (!runtimeEnvironment){
+            throw new Error("Runtime environment (runtimeEnvironment) is required.");
+        }
+
+        if (environmentVariables) {
+            environmentVariables.forEach(envVar => {
+                if (typeof envVar.key !== "string" || typeof envVar.value !== "string") {
+                    throw new Error("Environment variable keys and values must be strings.");
+                }
+            });
+        }
+
+        const payload: any = {
+            appName,
+            memoryMB,
+            runtimeEnvironment
+        };
+
+        if (environmentVariables) {
+            payload.environmentVariables = environmentVariables;
+        }
+
+        if (exposedViaWeb !== undefined) {
+            payload.exposedViaWeb = exposedViaWeb;
+        }
+
+        if (autoRestartEnabled !== undefined) {
+            payload.autoRestartEnabled = autoRestartEnabled;
+        }
+
+        if (startupCommand) {
+            payload.startupCommand = startupCommand;
+        }
+
+        const response = await this.axiosInstance.put(`/apps/${appId}/update`, payload);
+        return response.data;
     }
 
     public deleteApplication = async ({ appId }: { appId: string }): Promise<AxiosResponse> => {

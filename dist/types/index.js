@@ -18,3 +18,4 @@ __exportStar(require("./ApplicationResponseData"), exports);
 __exportStar(require("./CreateApplicationDataParams"), exports);
 __exportStar(require("./UserData"), exports);
 __exportStar(require("./TeamResponseData"), exports);
+__exportStar(require("./UpdateApplicationDataParams"), exports);

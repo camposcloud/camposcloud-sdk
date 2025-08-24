@@ -1,12 +1,11 @@
-export interface CreateApplicationDataParams {
-    file: Buffer;
+export interface UpdateApplicationDataParams {
+    appId: string;
     appName: string;
-    mainFile: string;
     memoryMB: number;
+    startupCommand: string;
     runtimeEnvironment: "nodejs" | "python";
     exposedViaWeb?: boolean;
     autoRestartEnabled?: boolean;
-    startupCommand?: string;
     teamId?: string;
     environmentVariables?: { key: string; value: string }[];
 }
