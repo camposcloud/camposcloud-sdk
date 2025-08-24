@@ -117,7 +117,7 @@ class CamposCloudSDK {
             if (startupCommand) {
                 payload.startupCommand = startupCommand;
             }
-            const response = yield this.axiosInstance.put(`/apps/${appId}/update`, payload);
+            const response = yield this.axiosInstance.post(`/apps/${appId}/update`, payload);
             return response.data;
         });
         this.deleteApplication = (_a) => __awaiter(this, [_a], void 0, function* ({ appId }) {
