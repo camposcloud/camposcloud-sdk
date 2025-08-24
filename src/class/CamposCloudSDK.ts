@@ -167,7 +167,7 @@ export default class CamposCloudSDK {
             payload.startupCommand = startupCommand;
         }
 
-        const response = await this.axiosInstance.put(`/apps/${appId}/update`, payload);
+        const response = await this.axiosInstance.post(`/apps/${appId}/update`, payload);
         return response.data;
     }
 
