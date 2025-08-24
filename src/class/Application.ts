@@ -1,4 +1,4 @@
-import { ApplicationResponseData } from "../types";
+import { ApplicationResponseData, UpdateApplicationDataParams } from "../types";
 import CamposCloudSDK from "./CamposCloudSDK";
 
 class Application {
@@ -12,6 +12,10 @@ class Application {
     restart = () => this.sdk.restartApplication({ appId: this.data._id });
     delete = () => this.sdk.deleteApplication({ appId: this.data._id });
     uploadFile = ({ file, path }: { file: Buffer, path?: string }) => this.sdk.uploadFile({ appId: this.data._id, file, path });
+
+    updateApplication = (data: Omit<UpdateApplicationDataParams, "appId">) => {
+        return this.sdk.updateApplication({ appId: this.data._id, ...data });
+    }
 }
 
 export default Application;

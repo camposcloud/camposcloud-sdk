@@ -119,7 +119,7 @@ export default class CamposCloudSDK {
     }
 
     public updateApplication = async (data: UpdateApplicationDataParams): Promise<ApplicationResponseData> => {
-        const { appId, appName, memoryMB, startupCommand, runtimeEnvironment, exposedViaWeb, autoRestartEnabled, environmentVariables, teamId } = data;
+        const { appId, appName, memoryMB, startupCommand, runtimeEnvironment, exposedViaWeb, autoRestartEnabled, environmentVariables } = data;
 
         if (!appId || typeof appId !== "string") {
             throw new Error("Application ID (appId) must be a valid string.");

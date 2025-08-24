@@ -80,7 +80,7 @@ class CamposCloudSDK {
             return new Application_1.default(this, response.data);
         });
         this.updateApplication = (data) => __awaiter(this, void 0, void 0, function* () {
-            const { appId, appName, memoryMB, startupCommand, runtimeEnvironment, exposedViaWeb, autoRestartEnabled, environmentVariables, teamId } = data;
+            const { appId, appName, memoryMB, startupCommand, runtimeEnvironment, exposedViaWeb, autoRestartEnabled, environmentVariables } = data;
             if (!appId || typeof appId !== "string") {
                 throw new Error("Application ID (appId) must be a valid string.");
             }

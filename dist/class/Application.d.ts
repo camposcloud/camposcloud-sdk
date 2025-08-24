@@ -1,4 +1,4 @@
-import { ApplicationResponseData } from "../types";
+import { ApplicationResponseData, UpdateApplicationDataParams } from "../types";
 import CamposCloudSDK from "./CamposCloudSDK";
 declare class Application {
     private sdk;
@@ -14,5 +14,6 @@ declare class Application {
     }) => Promise<{
         message: string;
     } | import("axios").AxiosStatic.AxiosError>;
+    updateApplication: (data: Omit<UpdateApplicationDataParams, "appId">) => Promise<ApplicationResponseData>;
 }
 export default Application;
