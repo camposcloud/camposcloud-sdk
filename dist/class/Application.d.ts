@@ -14,6 +14,9 @@ declare class Application {
     }) => Promise<{
         message: string;
     } | import("axios").AxiosStatic.AxiosError>;
-    updateApplication: (data: Omit<UpdateApplicationDataParams, "appId">) => Promise<ApplicationResponseData>;
+    downloadFile: ({ path }?: {
+        path?: string;
+    }) => Promise<Buffer>;
+    update: (data: Omit<UpdateApplicationDataParams, "appId">) => Promise<ApplicationResponseData>;
 }
 export default Application;

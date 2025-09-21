@@ -13,9 +13,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = __importDefault(require("../index"));
-const api = new index_1.default({ apiToken: "You-Token-Here" });
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const api = new index_1.default({ apiToken: process.env.API_KEY });
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
-    const me = yield api.getMe();
-    console.log(`Hello ${me.name} 👋`);
+    try {
+        const me = yield api.getMe();
+        console.log(`Hello ${me.name} 👋`);
+    }
+    catch (error) {
+        console.error(error);
+    }
 });
 main();

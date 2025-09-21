@@ -144,7 +144,7 @@ const file = await fs.promises.readFile('path/to/file.txt');
 const result = await api.uploadFile({ 
     appId: "your-app-id", 
     file: file,
-    path: "/optional/path" 
+    path: "/optional/path" // Optional
 });
 ```
 
@@ -164,13 +164,29 @@ const app = await api.getApplication({ appId: "your-app-id" });
 console.log(app.data);
 
 // Control methods
-await app.start();
-await app.stop();
-await app.restart();
-await app.delete();
+await app.start(); // Start the application
+await app.stop(); // Stop the application
+await app.restart(); // Restart the application
+await app.delete(); // Delete the application
+
+// Download file
+await app.downloadFile({ path: "path/to/file.txt" /* "path" is optional */ });
+
+// Update application with new data
+await app.update({
+    appName: "My App",
+    memoryMB: 512,
+    runtimeEnvironment: "nodejs",
+    startupCommand: "node index.js",
+    environmentVariables: [{ key: "NODE_ENV", value: "production" }], // Optional
+    exposedViaWeb: true, // Optional
+    autoRestartEnabled: true, // Optional
+    teamId: "your-team-id", // Optional
+});
 
 // Upload file directly to this application
 import fs from 'fs';
+
 const file = await fs.promises.readFile('path/to/file.txt');
 await app.uploadFile(file, '/optional/path');
 ```
@@ -182,6 +198,8 @@ await app.uploadFile(file, '/optional/path');
 - `restart()`: Restart the application
 - `delete()`: Delete the application
 - `uploadFile(file: Buffer, path?: string)`: Upload a file to the application
+- `downloadFile({ path?: string })`: Download a file from the application
+- `update(data: UpdateApplicationDataParams)`: Update the application with new data
 
 ## Complete Example
 
@@ -218,13 +236,14 @@ const main = async () => {
 
         // Upload additional file
         const configFile = await fs.promises.readFile('config.json');
-        await app.uploadFile(configFile, '/config');
+        await app.uploadFile({ file: configFile, path: '/config' });
+
         console.log('Config file uploaded!');
 
         // Get all applications
         const apps = await api.getApplications();
         console.log(`You have ${apps.applications.length} applications`);
-
+        
     } catch (error) {
         console.error('Error:', error);
     }

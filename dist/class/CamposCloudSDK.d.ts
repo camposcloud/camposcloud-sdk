@@ -49,4 +49,8 @@ export default class CamposCloudSDK {
     getTeam: ({ teamId }: {
         teamId: string;
     }) => Promise<TeamResponseData>;
+    downloadFile: ({ appId, path }: {
+        appId: string;
+        path?: string;
+    }) => Promise<Buffer>;
 }

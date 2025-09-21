@@ -250,4 +250,21 @@ export default class CamposCloudSDK {
         const response = await this.axiosInstance.get(`/teams/${teamId}`);
         return response.data as TeamResponseData;
     }
+
+    public downloadFile = async ({ appId, path }: { appId: string, path?: string }): Promise<Buffer> => {
+        if (!appId || typeof appId !== "string") {
+            throw new Error("Application ID (appId) must be a valid string.");
+        }
+
+        if (path && typeof path !== "string") {
+            throw new Error("File path (path) must be a valid string.");
+        }
+        
+        const queryParams = path ? `?path=${path}` : "";
+        const response = await this.axiosInstance.get(`/apps/${appId}/download${queryParams}`, {
+            responseType: "arraybuffer"
+        })
+
+        return response.data as Buffer;
+    }
 }

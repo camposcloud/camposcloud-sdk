@@ -12,8 +12,9 @@ class Application {
     restart = () => this.sdk.restartApplication({ appId: this.data._id });
     delete = () => this.sdk.deleteApplication({ appId: this.data._id });
     uploadFile = ({ file, path }: { file: Buffer, path?: string }) => this.sdk.uploadFile({ appId: this.data._id, file, path });
+    downloadFile = ({ path }: { path?: string } = {}) => this.sdk.downloadFile({ appId: this.data._id, path });
 
-    updateApplication = (data: Omit<UpdateApplicationDataParams, "appId">) => {
+    update = (data: Omit<UpdateApplicationDataParams, "appId">) => {
         return this.sdk.updateApplication({ appId: this.data._id, ...data });
     }
 }

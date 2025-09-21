@@ -180,6 +180,19 @@ class CamposCloudSDK {
             const response = yield this.axiosInstance.get(`/teams/${teamId}`);
             return response.data;
         });
+        this.downloadFile = (_a) => __awaiter(this, [_a], void 0, function* ({ appId, path }) {
+            if (!appId || typeof appId !== "string") {
+                throw new Error("Application ID (appId) must be a valid string.");
+            }
+            if (path && typeof path !== "string") {
+                throw new Error("File path (path) must be a valid string.");
+            }
+            const queryParams = path ? `?path=${path}` : "";
+            const response = yield this.axiosInstance.get(`/apps/${appId}/download${queryParams}`, {
+                responseType: "arraybuffer"
+            });
+            return response.data;
+        });
         if (!apiToken) {
             throw new Error("API Token is required to initialize CamposCloudSDK.");
         }
