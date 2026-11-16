@@ -14,5 +14,6 @@
     "paths": {
       "*": ["src/*"]                 // Ajuste conforme sua estrutura de diretórios
     }
-  }
+  },
+  "include": ["src"]
 }

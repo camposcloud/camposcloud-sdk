@@ -19,8 +19,10 @@
     "build": "tsc && node dist/index.js",
     "dev": "tsx watch src/test/index.ts",
     "start": "node dist/index.js",
-    "test": "tsx watch src/test/index.ts",
-    "prepublishOnly": "npm run build"
+    "test": "tsx --test \"tests/**/*.test.ts\"",
+    "prepublishOnly": "npm run build",
+    "test:live": "tsx watch src/test/index.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.test.json"
   },
   "publishConfig": {
     "access": "public"
