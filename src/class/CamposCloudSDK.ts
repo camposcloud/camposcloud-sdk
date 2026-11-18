@@ -5,6 +5,9 @@ import FormData from "form-data";
 import Application from "./Application";
 import { AxiosError } from "axios";
 
+/** `?path=<encoded>` for a file path, or nothing when there is none. */
+const pathQuery = (path?: string) => (path ? `?path=${encodeURIComponent(path)}` : "");
+
 export default class CamposCloudSDK {
 
     private apiToken: string;
@@ -223,7 +226,9 @@ export default class CamposCloudSDK {
         const formData = new FormData();
         formData.append("file", file, "file.zip");
 
-        const response = await this.axiosInstance.post(`/apps/${appId}/upload?path=${path}`, formData, {
+        // No path uploads to the root; it used to send "?path=undefined". The path is encoded: "&", "#" and spaces
+        // used to cut the URL short.
+        const response = await this.axiosInstance.post(`/apps/${appId}/upload${pathQuery(path)}`, formData, {
             headers: {
                 ...formData.getHeaders(),
             }
@@ -260,8 +265,7 @@ export default class CamposCloudSDK {
             throw new Error("File path (path) must be a valid string.");
         }
         
-        const queryParams = path ? `?path=${path}` : "";
-        const response = await this.axiosInstance.get(`/apps/${appId}/download${queryParams}`, {
+        const response = await this.axiosInstance.get(`/apps/${appId}/download${pathQuery(path)}`, {
             responseType: "arraybuffer"
         })
 
