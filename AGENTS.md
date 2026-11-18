@@ -18,9 +18,9 @@ SDK TypeScript/JavaScript da API da Campos Cloud, publicado no npm como `@campos
 - Mudou a API pública do SDK? Atualize o `README.md` e as páginas em `docs/sdk/javascript` (repositório docs), na mesma rodada e com PRs citando um ao outro.
 
 ## Fluxo de trabalho (obrigatório)
-- Toda modificação numa worktree própria:
-  `git fetch origin && git worktree add -b <tipo>/<assunto> .claude/worktrees/<assunto> origin/main`.
-  Nunca editar o checkout principal nem commitar na `main`.
+- Toda modificação direto na pasta do repositório, numa branch própria a partir da `main` atualizada:
+  `git fetch origin && git switch -c <tipo>/<assunto> origin/main`. Assim os servidores de desenvolvimento que já
+  estão rodando mostram a mudança na hora. Não criar worktrees. Nunca commitar na `main`.
 - Um assunto por branch.
 - Antes de subir: typecheck e build, lendo a saída.
 - Push da branch → PR para `main` (rascunho enquanto não estiver pronto) → revisão (`/code-review`) → correções. **Quem faz o merge na `main` é o Vitor**; agentes nunca fazem merge, push na `main` nem force-push.
