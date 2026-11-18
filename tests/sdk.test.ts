@@ -170,12 +170,10 @@ describe("arquivos", () => {
         const { sdk, calls } = setup(() => ({ message: "ok" }));
         await assert.rejects(sdk.uploadFile({ appId: "a1", file: "texto" as any }), /Buffer/);
         assert.deepEqual(await sdk.uploadFile({ appId: "a1", file: Buffer.from("x"), path: "/src" }), { message: "ok" });
-        assert.equal(calls[0].url, "/apps/a1/upload?path=/src");
+        assert.equal(calls[0].url, "/apps/a1/upload?path=%2Fsrc");
     });
 
-    test("uploadFile sem pasta envia para a raiz, sem 'path=undefined'", {
-        todo: "a URL é montada com `?path=${path}`: sem path vira '?path=undefined'",
-    }, async () => {
+    test("uploadFile sem pasta envia para a raiz, sem 'path=undefined'", async () => {
         const { sdk, calls } = setup(() => ({ message: "ok" }));
         await sdk.uploadFile({ appId: "a1", file: Buffer.from("x") });
         assert.doesNotMatch(String(calls[0].url), /undefined/);
@@ -186,13 +184,11 @@ describe("arquivos", () => {
         await sdk.downloadFile({ appId: "a1" });
         await sdk.downloadFile({ appId: "a1", path: "/src" });
         assert.equal(calls[0].url, "/apps/a1/download");
-        assert.equal(calls[1].url, "/apps/a1/download?path=/src");
+        assert.equal(calls[1].url, "/apps/a1/download?path=%2Fsrc");
         assert.equal(calls[0].responseType, "arraybuffer");
     });
 
-    test("caminhos com caracteres especiais vão codificados na URL", {
-        todo: "o caminho entra na query sem encodeURIComponent: '&', '#' e espaço quebram a URL",
-    }, async () => {
+    test("caminhos com caracteres especiais vão codificados na URL", async () => {
         const { sdk, calls } = setup(() => Buffer.from(""));
         await sdk.downloadFile({ appId: "a1", path: "/notas & ideias #1.txt" });
         const url = new URL(String(calls[0].url), "https://api.test/");
@@ -212,9 +208,7 @@ describe("conta e times", () => {
 });
 
 describe("pacote", () => {
-    test("todo pacote importado pelo SDK está nas dependencies", {
-        todo: "src importa 'form-data', que não está em dependencies: só funciona porque o axios o instala",
-    }, () => {
+    test("todo pacote importado pelo SDK está nas dependencies", () => {
         const root = path.resolve(__dirname, "..");
         const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
         const declared = new Set(Object.keys(pkg.dependencies ?? {}));
