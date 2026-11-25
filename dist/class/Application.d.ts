@@ -17,6 +17,9 @@ declare class Application {
     downloadFile: ({ path }?: {
         path?: string;
     }) => Promise<Buffer>;
+    verifyCustomDomain: () => Promise<{
+        verified: boolean;
+    }>;
     update: (data: Omit<UpdateApplicationDataParams, "appId">) => Promise<ApplicationResponseData>;
 }
 export default Application;

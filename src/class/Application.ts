@@ -13,6 +13,7 @@ class Application {
     delete = () => this.sdk.deleteApplication({ appId: this.data._id });
     uploadFile = ({ file, path }: { file: Buffer, path?: string }) => this.sdk.uploadFile({ appId: this.data._id, file, path });
     downloadFile = ({ path }: { path?: string } = {}) => this.sdk.downloadFile({ appId: this.data._id, path });
+    verifyCustomDomain = () => this.sdk.verifyCustomDomain({ appId: this.data._id });
 
     update = (data: Omit<UpdateApplicationDataParams, "appId">) => {
         return this.sdk.updateApplication({ appId: this.data._id, ...data });
