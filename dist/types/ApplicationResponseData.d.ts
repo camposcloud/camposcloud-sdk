@@ -26,7 +26,19 @@ export interface ApplicationResponseData {
     internalPort: number | null;
     externalPort: number | null;
     assignedSubdomain: string | null;
+    /** The custom domain routed to the application, if any. */
+    assignedCustomDomain?: string | null;
+    /** A custom domain waiting for its ownership proof: publish the TXT record below, then call `verifyCustomDomain`. */
+    customDomainPending?: string;
+    /** Name of the TXT record that proves you own `customDomainPending`. */
+    customDomainTxtName?: string;
+    /** Value of that TXT record. */
+    customDomainTxtValue?: string;
+    /** The main file, relative to the application root. */
+    mainFile?: string;
     startupCommand: string;
+    /** Runs after the dependencies are installed and before `startupCommand`, if any. */
+    buildCommand?: string | null;
     installDependenciesCmd: string | null;
     runtimeEnvironment: string;
     autoRestartEnabled: boolean;

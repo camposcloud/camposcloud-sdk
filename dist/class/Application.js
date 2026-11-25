@@ -10,6 +10,7 @@ class Application {
         this.delete = () => this.sdk.deleteApplication({ appId: this.data._id });
         this.uploadFile = ({ file, path }) => this.sdk.uploadFile({ appId: this.data._id, file, path });
         this.downloadFile = ({ path } = {}) => this.sdk.downloadFile({ appId: this.data._id, path });
+        this.verifyCustomDomain = () => this.sdk.verifyCustomDomain({ appId: this.data._id });
         this.update = (data) => {
             return this.sdk.updateApplication(Object.assign({ appId: this.data._id }, data));
         };

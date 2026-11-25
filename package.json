@@ -1,6 +1,6 @@
 {
   "name": "@camposcloud/sdk",
-  "version": "1.1.4",
+  "version": "1.2.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "module": "dist/index.js",
@@ -20,6 +20,7 @@
     "dev": "tsx watch src/test/index.ts",
     "start": "node dist/index.js",
     "test": "tsx watch src/test/index.ts",
+    "test:unit": "tsx --test test/*.test.ts",
     "prepublishOnly": "npm run build"
   },
   "publishConfig": {

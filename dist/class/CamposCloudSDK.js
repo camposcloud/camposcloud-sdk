@@ -12,12 +12,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getApiError = getApiError;
 const axios_1 = __importDefault(require("axios"));
 const form_data_1 = __importDefault(require("form-data"));
 const Application_1 = __importDefault(require("./Application"));
 const axios_2 = require("axios");
+/**
+ * What the API said about a failed call: the HTTP status, its message and, when there is one, its stable `code`.
+ * Returns null for anything that is not an answer of the API (no connection, timeout, a bug in your code).
+ *
+ *     try { await sdk.verifyCustomDomain({ appId }) }
+ *     catch (err) { if (getApiError(err)?.code === "CUSTOM_DOMAIN_TXT_NOT_FOUND") { ...wait and retry } }
+ */
+function getApiError(error) {
+    const response = error === null || error === void 0 ? void 0 : error.response;
+    if (!response || typeof response.status !== "number")
+        return null;
+    const data = response.data;
+    const body = data && typeof data === "object" && typeof data.error === "string"
+        ? data
+        : { error: `HTTP ${response.status}` };
+    return Object.assign(Object.assign({ status: response.status, error: body.error }, (typeof body.code === "string" ? { code: body.code } : {})), { body });
+}
 class CamposCloudSDK {
-    constructor({ apiToken }) {
+    /**
+     * @param apiToken  your API key (a `cc_pat_...` token from the panel)
+     * @param baseUrl   only to point the SDK at another server (for example a local control); defaults to production
+     */
+    constructor({ apiToken, baseUrl }) {
         this.getApplication = (_a) => __awaiter(this, [_a], void 0, function* ({ appId }) {
             if (!appId || typeof appId !== "string") {
                 throw new Error("Application ID (appId) must be a valid string.");
@@ -30,7 +52,7 @@ class CamposCloudSDK {
             return response.data;
         });
         this.createApplication = (data) => __awaiter(this, void 0, void 0, function* () {
-            const { file, appName, mainFile, memoryMB, runtimeEnvironment, exposedViaWeb, autoRestartEnabled, startupCommand, teamId, environmentVariables } = data;
+            const { file, appName, mainFile, memoryMB, runtimeEnvironment, exposedViaWeb, autoRestartEnabled, startupCommand, buildCommand, teamId, environmentVariables } = data;
             if (!file) {
                 throw new Error("File is required to create an application.");
             }
@@ -71,6 +93,9 @@ class CamposCloudSDK {
             if (startupCommand) {
                 formData.append("startupCommand", startupCommand);
             }
+            if (buildCommand) {
+                formData.append("buildCommand", buildCommand);
+            }
             if (teamId) {
                 formData.append("team", teamId);
             }
@@ -80,7 +105,7 @@ class CamposCloudSDK {
             return new Application_1.default(this, response.data);
         });
         this.updateApplication = (data) => __awaiter(this, void 0, void 0, function* () {
-            const { appId, appName, memoryMB, startupCommand, runtimeEnvironment, exposedViaWeb, autoRestartEnabled, environmentVariables } = data;
+            const { appId, appName, memoryMB, startupCommand, buildCommand, mainFile, assignedCustomDomain, runtimeEnvironment, exposedViaWeb, autoRestartEnabled, environmentVariables } = data;
             if (!appId || typeof appId !== "string") {
                 throw new Error("Application ID (appId) must be a valid string.");
             }
@@ -117,7 +142,35 @@ class CamposCloudSDK {
             if (startupCommand) {
                 payload.startupCommand = startupCommand;
             }
+            // An empty string is sent on purpose: it removes the build command / the custom domain.
+            if (buildCommand !== undefined) {
+                if (typeof buildCommand !== "string")
+                    throw new Error("Build command (buildCommand) must be a string.");
+                payload.buildCommand = buildCommand;
+            }
+            if (mainFile !== undefined) {
+                if (typeof mainFile !== "string" || !mainFile.trim())
+                    throw new Error("Main file (mainFile) must be a non-empty string.");
+                payload.mainFile = mainFile;
+            }
+            if (assignedCustomDomain !== undefined) {
+                if (typeof assignedCustomDomain !== "string")
+                    throw new Error("Custom domain (assignedCustomDomain) must be a string.");
+                payload.assignedCustomDomain = assignedCustomDomain;
+            }
             const response = yield this.axiosInstance.post(`/apps/${appId}/update`, payload);
+            return response.data;
+        });
+        /**
+         * Confirms the pending custom domain of an application. First set it with `updateApplication`
+         * (`assignedCustomDomain`), then publish the TXT record from `customDomainTxtName` / `customDomainTxtValue`.
+         * Until the record propagates the API answers 400 with code "CUSTOM_DOMAIN_TXT_NOT_FOUND" (see `getApiError`).
+         */
+        this.verifyCustomDomain = (_a) => __awaiter(this, [_a], void 0, function* ({ appId }) {
+            if (!appId || typeof appId !== "string") {
+                throw new Error("Application ID (appId) must be a valid string.");
+            }
+            const response = yield this.axiosInstance.post(`/apps/${encodeURIComponent(appId)}/custom-domain/verify`);
             return response.data;
         });
         this.deleteApplication = (_a) => __awaiter(this, [_a], void 0, function* ({ appId }) {
@@ -198,7 +251,7 @@ class CamposCloudSDK {
         }
         this.apiToken = apiToken;
         this.axiosInstance = axios_1.default.create({
-            baseURL: "https://api.camposcloud.com/v1/",
+            baseURL: baseUrl ? `${baseUrl.replace(/\/+$/, "")}/v1/` : "https://api.camposcloud.com/v1/",
             headers: {
                 Authorization: `Bearer ${this.apiToken}`,
                 "Content-Type": "application/json"
